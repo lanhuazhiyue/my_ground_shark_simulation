@@ -1,0 +1,28 @@
+<launch>
+  <arg
+    name="model" />
+  <param
+    name="robot_description"
+    textfile="$(find ground_shark_description)/urdf/Ground-Shark_description.urdf" />
+  
+  <!-- joint_state_publisher 发布当前的关节状态 -->
+  <!-- 默认从参数服务器寻找<robot_description>指向的文件，关节状态发布到<joint_states>话题上 -->
+  <node
+    name="joint_state_publisher_gui"
+    pkg="joint_state_publisher_gui"
+    type="joint_state_publisher_gui" />
+
+  <!-- rpbot_state_publisher 转化关节状态为tf变换并广播 -->
+  <!-- 默认订阅<joint_states>话题，广播到/tf话题，可通过tf监听器获取变换-->
+  <node
+    name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+
+  <!-- 运行 rviz 订阅 RobotModel -->
+  <node
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    args="-d $(find ground_shark_description)/config/urdf.rviz" />
+</launch>

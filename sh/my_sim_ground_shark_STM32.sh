@@ -1,0 +1,1 @@
+roslaunch my_new_robot_simulation_pkg my_new_robot_simulation_STM32.launch start_rviz:=true start_teleop:=true;

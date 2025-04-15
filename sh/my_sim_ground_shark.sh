@@ -1,0 +1,1 @@
+roslaunch my_new_robot_simulation_pkg my_new_robot_simulation_gazebo.launch start_rviz:=true start_teleop:=true;

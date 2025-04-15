@@ -1,0 +1,29 @@
+<launch>
+
+  <param name="/use_sim_time" value="true" />     <!-- 让ROS节点使用仿真时间 -->
+
+  <include
+    file="$(find gazebo_ros)/launch/empty_world.launch" />
+    
+  <!-- <node
+    name="tf_footprint_base"
+    pkg="tf"
+    type="static_transform_publisher"
+    args="0 0 0 0 0 0 base_link base_footprint 40" /> -->
+  <arg name="model_name" value="ground_shark" />
+  <param name="model_name" value="$(arg model_name)" />
+  <param name="my_robot_description" command="$(find xacro)/xacro '$(find ground_shark_description)/urdf/Ground-Shark_description_fixed.xacro' model_name:=$(arg model_name)" />
+  <node
+    name="spawn_urdf"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    args="-param my_robot_description -urdf -model Ground-Shark_description"
+    output="screen" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+      <remap from="joint_states" to="ground_shark/joint_states"/>
+      <param name="use_tf_static" value="true"/>
+      <remap from="robot_description" to="my_robot_description"/>
+  </node>
+
+</launch>

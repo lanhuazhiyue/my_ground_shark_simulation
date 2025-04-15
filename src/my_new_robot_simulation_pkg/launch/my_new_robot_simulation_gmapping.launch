@@ -1,0 +1,14 @@
+
+<launch>
+  <include file="$(find my_new_robot_simulation_pkg)/launch/my_new_robot_simulation_STM32.launch"> 
+  </include>
+
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <param name="base_frame" value="base_footprint"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="map_frame" value="map"/>
+    <remap from="scan" to="rplidarA1M8/LaserScan"/>
+    <remap from="odom" to="stm32_message/odom" />
+  </node>
+
+</launch>

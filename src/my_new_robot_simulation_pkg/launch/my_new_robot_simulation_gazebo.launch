@@ -1,0 +1,58 @@
+
+<launch>
+
+  <!-- 作用域：<arg> 仅在当前 launch 文件有效，如需全局生效需使用 <param>。 -->
+  <param name="/use_sim_time" value="true" />     <!-- 让ROS节点使用仿真时间 -->
+
+  <!-- 启动Gazebo仿真环境并设置参数加载指定的World场景 -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="world_name" value="$(find my_new_robot_simulation_pkg)/world/my_house_with_table.world"/>
+      <arg name="gui" value="true"/>              <!-- 启动GUI,能够在可视化界面中与仿真环境交互 -->
+  </include>
+
+  <!-- 将指定 urdf 模型的路径加载到参数服务器中-->
+  <!-- <param name="robot_description" textfile="$(find ground_shark_description)/urdf/ground_shark_description_fixed.urdf" /> -->
+  <!-- 为了方便增加仿真属性，升级 urdf 为 xacro -->
+  <arg name="model_name" value="ground_shark" />
+  <param name="model_name" value="$(arg model_name)" />
+  <arg name="x_position_init"  value="-2.5" />
+  <param name="x_position_init" value="$(arg x_position_init)" />
+  <arg name="y_position_init" value="-2.5" />
+  <param name="y_position_init" value="$(arg y_position_init)" />
+  <param name="my_robot_description" command="$(find xacro)/xacro '$(find ground_shark_description)/urdf/Ground-Shark_description_fixed.xacro' model_name:=$(arg model_name)"/>
+
+  <!-- 借助gazebo_ros功能包的spawn_model节点在Gazebo中生成robot_description -->
+  <!-- args="提供的模型路径 -模型类型 -model 模型名称 -x 初始位置 -y 2.0 -z 0.5 -R 初始姿态 -P 0 -Y 0" -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param my_robot_description -urdf -model $(arg model_name) -x $(arg x_position_init) -y $(arg y_position_init)" output="screen"/>
+
+  <!-- 发布 world 坐标系到 odom 坐标系的静态tf变换 -->
+  <node pkg="tf2_ros" type="static_transform_publisher" 
+      name="world_to_OdomTrue" 
+      args="0 0 0 0 0 0 world Odom_True" />
+
+
+  <!-- joint_state_publisher 发布当前的关节状态 -->
+  <!-- 默认从参数服务器寻找<robot_description>指向的文件，关节状态发布到<joint_states>话题上 -->
+  <!-- gui表示生成一个可视化界面动态发布 -->
+  <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" /> -->
+  <!-- 动态关节状态由Gazebo生成，静态关节状态由robot_state_publisher加载urdf生成 -->
+
+  <!-- rpbot_state_publisher 读取robot_description，转化关节状态为tf变换并广播 -->
+  <!-- 默认订阅<joint_states>话题，广播到/tf话题，可通过tf监听器获取变换-->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+    <remap from="joint_states" to="ground_shark/joint_states"/>
+    <param name="use_tf_static" value="true"/>
+    <remap from="robot_description" to="my_robot_description"/>
+  </node>
+      
+  <!-- 在rviz订阅相关话题显示 -->
+  <arg name="start_rviz" default="true" />
+  <node if="$(arg start_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find my_new_robot_simulation_pkg)/config/my_new_robot_simulation.rviz">
+    <remap from="robot_description" to="my_robot_description"/>
+  </node>
+
+  <!-- 是否启动键盘控制节点发布 /cmd_vel -->
+  <arg name="start_teleop" default="false" />
+  <node if="$(arg start_teleop)"  name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen"/>
+
+</launch>

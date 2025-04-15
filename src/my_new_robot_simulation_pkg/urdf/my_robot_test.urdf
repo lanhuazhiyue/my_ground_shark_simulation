@@ -1,0 +1,54 @@
+<!-- 建立一个机器人描述 -->
+<robot name="test_robot">
+    <!-- 包含4个连杆 -->
+    <link name="link1" >
+        <!-- 具有intertial、visual、collision 共3个元素，每个元素又包含多个配置元素 -->
+        <inertial>
+            <origin xyz="0 0 0.5" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100"/> <!-- 旋转惯量，通常可以由solidworks自动计算-->
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="1 1 1"/>
+            </geometry>
+            <material name="Cyan">
+                <color rgba="0 1.0 1.0 1.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="1" length="0.5"/>
+            </geometry>
+        </collision>
+    </link>
+    <link name="link2" />
+    <link name="link3" />
+    <link name="link4" />
+
+    <!-- 定义连杆之间的连接关系 -->
+    <!-- name在一个文件中是唯一的，type可以是 revolute、continuous、prismatic、fixed、floating、planar 的其中一个 -->
+    <joint name="joint1" type="continuous"> 
+        <!-- 具有origin(子连杆相对于父连杆的位姿)、parent、child、axis等多个元素 -->
+        <parent link="link1"/>
+        <child link="link2"/>
+        <origin xyz="5 3 0" rpy="0 0 0" /> <!-- xyz是位置，rpy是姿态 -->
+        <axis xyz="-0.9 0.15 0" /> <!-- axis是旋转轴，xyz是轴的方向 -->
+    </joint>
+
+    <joint name="joint2" type="continuous">
+        <parent link="link1"/>
+        <child link="link3"/>
+        <origin xyz="-2 5 0" rpy="0 0 1.57" />
+        <axis xyz="-0.707 0.707 0" />
+    </joint>
+
+    <joint name="joint3" type="continuous">
+        <parent link="link3"/>
+        <child link="link4"/>
+        <origin xyz="5 0 0" rpy="0 0 -1.57" />
+        <axis xyz="0.707 -0.707 0" />
+    </joint>
+</robot>

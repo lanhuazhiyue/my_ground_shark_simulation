@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<robot name="Ground-Shark" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+  <!-- 宏定义 -->
+  <xacro:macro name="default_Link" params="link_name">
+    <gazebo reference="${link_name}">
+      <material>Gazebo/Black</material>
+      <!-- 摩擦相关 -->
+      <!-- 主摩擦系数，决定与地面主方向的摩擦力 -->
+      <mu1>0.5</mu1>
+      <!-- 次摩擦系数，通常用来描述侧向或次要方向的摩擦力 -->
+      <mu2>0.5</mu2>
+      <!-- 指定 mu1 的方向，这里希望是万向的 -->
+      <fdir1>0 0 0</fdir1>
+      <!-- 接触相关 -->
+      <!-- Link速度的指数衰减因子，影响接触修正时速度的衰减（例如 0.3 表示保留 70% 的前一速度） -->
+      <!-- <dampingFactor>0.3</dampingFactor> -->
+      <!-- 最大接触修正速度，防止修正速度过大 -->
+      <maxVel>1.0</maxVel>
+      <!-- 当穿透深度超过此值时施加接触修正脉冲 -->
+      <!-- <minDepth>0.001</minDepth> -->
+      <!-- 接触刚度，决定碰撞时模型的“硬度”，值越大模型越难被压缩 -->
+      <kp>100000.0</kp>
+      <!-- 接触阻尼系数，影响碰撞过程中的能量耗散 -->
+      <kd>500.0</kd>
+      <!-- 可选：定义两个实体之间允许的最大接触数（这里在 physics 配置中通常会指定） -->
+      <!-- <maxContacts>10</maxContacts> -->
+      <!-- 材质 -->
+      <!-- 对激光的反射强度 -->
+      <!-- <laserRetro>0.9</laserRetro> -->
+    </gazebo>
+  </xacro:macro>
+
+  <!-- 在Gazebo中joint也有一些特定的专属标签，主要是配置力矩相关，一般用不上 -->
+
+  <!-- 调用宏定义 -->
+  <xacro:default_Link link_name="Wheel_FL_Link" />
+  <xacro:default_Link link_name="Wheel_FR_Link" />
+  <xacro:default_Link link_name="Wheel_BL_Link" />
+  <xacro:default_Link link_name="Wheel_BR_Link" />
+  <xacro:default_Link link_name="base_link" />
+  <xacro:default_Link link_name="base_footprint" />
+
+  <!-- 设置属性 -->
+  <gazebo reference="base_footprint">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="base_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="camera_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+  <gazebo reference="imu_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+  <gazebo reference="lidar_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- 加载joint发布插件，向ROS端传输Gazebo中模型的joint状态 -->
+  <!-- 事实上，spawm_model 加载的我们的fixed小车整体并没有可活动的关节，所以不使用此插件，直接在ROS端发布一次各link之间的静态tf变换关系亦可-->
+  <!-- <gazebo>
+    <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+      <robotNamespace>/ground_shark</robotNamespace>
+      <updateRate>10</updateRate>
+    </plugin>
+  </gazebo> -->
+
+  <!-- 加载万向控制插件控制车体，Planar Move Plugin仅适用与地面2D控制，空间3维控制使用xxx -->
+  <arg name="model_name" default="ground_shark"/> <!-- 模型名称 -->
+  <gazebo>
+    <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+      <!-- <robotNamespace>/$(arg model_name)</robotNamespace> -->
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>/Gazebo/Odom_True</odometryTopic>
+      <odometryFrame>Odom_True</odometryFrame>
+      <odometryRate>150.0</odometryRate>
+      <robotBaseFrame>Base_Link</robotBaseFrame>
+      <cmdTimeout>-1.0</cmdTimeout>
+    </plugin>
+  </gazebo>
+
+  <!-- 在 Camera_Link 上加载相机测量环境图像 -->
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="camera">
+      <always_on>true</always_on>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <!-- <gpu_id>0</gpu_id> -->
+        <alwaysOn>true</alwaysOn>
+        <updateRate>30.0</updateRate>
+        <cameraName>camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- 在 IMU_Link 上加载IMU测量插件检测运动 -->
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>200</update_rate>
+      <visualize>true</visualize>
+      <topic>/ICM42688P/imu</topic>
+      <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so" >
+        <topicName>/ICM42688P/imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>200.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+
+  <!-- 在 Lader_Link 加载激光雷达测量插件检测障碍点云 -->
+  <gazebo reference="lidar_link">
+    <sensor type="ray" name="laser">
+    <!-- <sensor type="gpu_ray" name="laser"> -->
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <!-- 每秒扫描次数 -->
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <!-- 单次采样个数 -->
+            <samples>800</samples>
+            <!-- 样本分辨率 -->
+            <resolution>1</resolution>
+            <!-- 扫描范围 -->
+            <min_angle>-3.1415926</min_angle>
+            <max_angle>3.1415926</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <!-- 有效测量距离 -->
+          <min>0.15</min>
+          <max>12.0</max>
+          <!-- 测量精度 0.5mm -->
+          <resolution>0.0005</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.0005</stddev>
+        </noise>
+      </ray>
+      <!-- <plugin name="gazebo_ros_laser_scan_controller" filename="libgazebo_ros_gpu_laser.so"> -->
+      <plugin name="gazebo_ros_laser_scan_controller" filename="libgazebo_ros_laser.so">
+        <topicName>/rplidarA1M8/LaserScan</topicName>
+        <frameName>lidar_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

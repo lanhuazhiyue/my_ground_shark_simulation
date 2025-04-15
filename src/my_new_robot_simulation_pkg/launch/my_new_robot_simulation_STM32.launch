@@ -1,0 +1,10 @@
+
+<launch>
+  <include file="$(find my_new_robot_simulation_pkg)/launch/my_new_robot_simulation_gazebo.launch"> 
+    <arg name="start_rviz" value="true" />
+    <arg name="start_teleop" value="false" />
+  </include>
+  
+  <node pkg="my_new_robot_simulation_pkg" type="my_new_robot_states_gazebo2STM32_node" name="my_new_robot_states_gazebo2STM32" output="screen" />
+
+</launch>

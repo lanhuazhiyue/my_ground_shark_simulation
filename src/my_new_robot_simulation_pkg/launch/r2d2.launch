@@ -1,0 +1,9 @@
+<launch>
+    <param name="my_robot_description" textfile="$(find my_new_robot_simulation_pkg)/urdf/my_R2-D2_test.urdf" />
+    <node name="my_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+        <remap from="robot_description" to="my_robot_description" />
+        <remap from="joint_states" to="my_joint_states" />
+    </node>
+
+    <node name="my_state_publisher" pkg="my_new_robot_simulation_pkg" type="my_state_publisher" />
+</launch>
