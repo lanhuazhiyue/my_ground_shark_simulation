@@ -3,6 +3,8 @@
 #include <sensor_msgs/JointState.h>
 #include <tf/transform_broadcaster.h>
 
+// 测试用，非项目必需文件！
+
 int main(int argc, char** argv) {
     ros::init(argc, argv, "state_publisher");
     ros::NodeHandle n;

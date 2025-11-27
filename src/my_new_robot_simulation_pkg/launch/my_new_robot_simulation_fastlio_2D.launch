@@ -1,0 +1,9 @@
+
+<launch>
+  <include file="$(find my_new_robot_simulation_pkg)/launch/my_new_robot_simulation_STM32.launch"> 
+  </include>
+
+  <!-- fast-lio2 的2D版本 -->
+   
+
+</launch>

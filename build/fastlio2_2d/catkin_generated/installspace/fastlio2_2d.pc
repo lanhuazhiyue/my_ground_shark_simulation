@@ -1,0 +1,8 @@
+prefix=/home/ju/my_Simulation_Gazebo/install
+
+Name: fastlio2_2d
+Description: Description of fastlio2_2d
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,46 +1,100 @@
 # My_Ground_Shark_Simulation（工作空间）
-## ground_shark_description（自定义功能包）
+## 0 Prepare
+### 0.1 编译
+```
+sudo apt-get install ros-noetic-turtlebot3-msgs
+```
+cd 工作空间
+```
+catkin_make
+```
+### 0.2 设置gazebo使用独显加速打开
+
+* 安装nvidia驱动
+```
+ubuntu-drivers devices
+# 选择recomanded的那个版本
+sudo apt install nvidia-driver-535
+sudo reboot
+nvidia-smi
+```
+
+* 设置gazebo永久默认使用GPU
+```
+sudo gedit ~/.bashrc 
+###
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+###
+source ~/.bashrc
+```
+如果不希望全局使用，可以在launch文件中单独配置
+```
+<launch>
+  <env name="__NV_PRIME_RENDER_OFFLOAD" value="1" />
+  <env name="__GLX_VENDOR_LIBRARY_NAME" value="nvidia" />
+  <!-- 其他内容保持不变 -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find your_pkg)/worlds/your_world.world"/>
+  </include>
+</launch>
+```
+
+### 0.3 设置gazebo的模型加载路径
+解压 my_Gazebo_Models 压缩包内的内容到 ~/.gazebo/models/ 路径下，没有models文件夹可以自己新建一个，其默认为隐藏文件夹可以 ctrl+H 显示隐藏。同时删除其中的.git文件夹。
+
+### 0.4 Gazebo 进程崩溃
+Gazebo容易出现接口占用的情况，其实是因为后台存在上一次结束的gzserver崩溃但没有终止，此时只需要强制杀死进程即可
+```
+killall -9 gzserver gzclient
+```
+
+
+## 1. ground_shark_description（自定义功能包）
 输入：机器人描述；
 输出：/RobotModel
-### Intro
+### 1.1 Intro
 * mesh文件夹中的STL文件和urdf文件夹中以**Ground-Shark_description**命名的文件是从soliworks中使用sw_urdf_exporter插件自动导出的
 * urdf文件夹里的**Ground-Shark_description_fixed.urdf**是将车轮与点击之间的joint修改为fixed锁死之后的模型文件
 * **Ground-Shark_description_fixed.xacro**是在**Ground-Shark_description_fixed.urdf**的基础上额外添加了camera和imu，并调用了**Ground-Shark_description_fixed.gazebo.xacro**
 * **Ground-Shark_description_fixed.gazebo.xacro**里面根据link加载了Gazebo插件，使模型能够与仿真环境进行交互
 * 将车轮关节固定的原因是假装模型中的圆柱形状的车轮是麦克纳姆轮，能够带动车身在二维地面上自由移动，不存在转向半径。所以使用的仿真插件是**libgazebo_ros_planar_move.so**而非**libgazebo_ros_diff_drive.so**
-### Show Run
-* 在Rviz中显示模型
+
+
+
+### 1.2 Show Run
+#### 在Rviz中显示模型
 ```bash
-    roslaunch Ground-Shark_description display.launch 
+    roslaunch ground-Shark_description display.launch 
 ```
 1. 其中，display.launch文件首先将 **Ground-Shark_description.urdf**加载到了参数服务器中作为 robot_description ， 
 2. 然后， **joint_state_publisher_gui** 功能包（ROS自带）的joint_state_publisher_gui节点会寻找robot_description指向的urdf中可活动的joint关节显示在UI界面中，用户能够拖动滑杆改变joint的状态，并发布当前状态到/joint_states话题中；
 3. 接着， **robot_state_publisher**功能包（ROS自带）的robot_state_publisher节点会订阅/joint_states话题，并广播到/tf话题中；
 4. 最后， Rviz 会订阅相关话题，可视化显示；
 
-* 在Gazebo中显示模型
+#### 在Gazebo中显示模型
 ```bash
-    roslaunch Ground-Shark_description gazebo.launch 
+    roslaunch ground-Shark_description gazebo.launch 
 ```
 1. 其中，gazebo.launch文件使用 **gazebo_ros** （ROS自带）功能包的 empty_world.launch 脚本加载一个空的世界场景
 2. 然后，使用spawn_model节点加载Ground-Shark_description.urdf文件，并将模型命名为 Ground-Shark_description 加载到Gazebo中。
 
-* 在Gazebo中显示交互模型
+#### 在Gazebo中显示交互模型
 ```bash
-    roslaunch Ground-Shark_description gazebo_ros.launch 
+    roslaunch ground-Shark_description gazebo_ros.launch 
 ```
 1. 其中，gazebo_ros.launch文件使用 **gazebo_ros** （ROS自带）功能包的 empty_world.launch 脚本加载一个空的世界场景
 2. 然后，使用spawn_model节点加载 Ground-Shark_description_fixed.xacro 文件，并将模型命名为 Ground-Shark_description 加载到Gazebo中。
 3. 接着， **robot_state_publisher** （ROS自带）功能包的 robot_state_publisher 节点会读取 my_robot_description 参数的urdf文件，将其中的fixed关节发布静态tf变换，同时订阅 /ground_shark/joint_states 话题（由Gazebo生成）获得动态变换，广播到 /tf 话题；
 
-## my_new_robot_simulation_pkg（自定义功能包）
+## 2. my_new_robot_simulation_pkg（自定义功能包）
 输入：/cmd_vel
-输出：/odom、/LaserScan
-### Intro
+输出：/stm32_message/odom、 /rplidarA1M8/LaserScan
+### 2.1 Intro
 * world文件夹里储存了一个Gazebo的世界环境描述文件**my_house_with_table.world** 
 * 其余R2D2名称的文件是测试时用的，无实际意义
-### Show Run
-* 在Gazebo中加载世界和环境和小车模型，并在Rviz中订阅显示Gazebo发出的相关话题
+### 2.2 Show Run
+#### 2.2.1 在Gazebo中加载世界和环境和小车模型，并在Rviz中订阅显示Gazebo发出的相关话题
 ```bash
     roslaunch my_new_robot_simulation_pkg my_new_robot_simulation_gazebo.launch
 ```
@@ -51,7 +105,7 @@
 5. 接着，运行 **robot_state_publisher** 功能包（ROS自带）中的 robot_state_publisher 节点加载 "robot_description" 参数中的fixed关节发布静态变换，同时订阅 /ground_shark/joint_states 话题（由Gazebo生成）获得动态变换，广播到 /tf 话题；
 6. 最后， Rviz 可以订阅相关话题可视化显示出来。
 
-* 获取Gazebo的指定数据模拟STM32端发过来的数据,相当于Gazebo端就是一个STM32小车， gazebo_ros 功能包就是串口
+#### 2.2.2 获取Gazebo的指定数据模拟STM32端发过来的数据,相当于Gazebo端就是一个STM32小车， gazebo_ros 功能包就是串口
 ```bash
     roslaunch my_new_robot_simulation_pkg my_new_robot_simulation_STM32.launch
 ```
@@ -64,7 +118,13 @@
     q0,q1,q2,q3 是直接取的Gazebo的 world(Odom_True) 世界坐标系位置状态真值，模拟STM32端的姿态估计结果；
 5. 从tf变换上，相当于复制了一份 Odom_True --> Base_Link 到 odom --> base_link ，这样做的原因是一棵TF树只能有一个根节点且每个子节点仅能有一个父节点，而 SLAM 端会生成一个 map --> odom 的tf变换，所以需要将真实的 Odom_Ture 和模拟STM32的 odom 分开成两棵树。
 
-    
+## 3. fastlio2_2d （自定义功能包）
+输入：/stm32_message/odom、 /rplidarA1M8/LaserScan
+输出：/map、 /pose
+开发中。。。。。。
+## 4. ego_simulation_gazebo （自定义功能包）
+开发中。。。。。。
+
 
 
 
