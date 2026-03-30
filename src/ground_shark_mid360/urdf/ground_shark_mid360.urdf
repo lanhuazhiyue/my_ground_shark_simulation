@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="ground_shark_mid360">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="2.58907190131552E-08 2.65764913097433E-08 0.041501286881111"
+        rpy="0 0 0" />
+      <mass
+        value="2.88408104892143" />
+      <inertia
+        ixx="0.00850390921653607"
+        ixy="-1.35978505114286E-10"
+        ixz="-3.11887110384155E-09"
+        iyy="0.0114346915701379"
+        iyz="-3.34239705459834E-09"
+        izz="0.0166269839660727" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="lidar_link">
+    <inertial>
+      <origin
+        xyz="-0.000199554712715849 -6.38245507999721E-06 -0.0174673987069298"
+        rpy="0 0 0" />
+      <mass
+        value="0.141887202110515" />
+      <inertia
+        ixx="4.17976340860606E-05"
+        ixy="-5.6242468293159E-09"
+        ixz="3.05339161654429E-07"
+        iyy="4.5077236165051E-05"
+        iyz="-4.50333967050321E-10"
+        izz="6.87996344440103E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/lidar_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/lidar_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="lidar_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.1224991"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="lidar_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="motorbracket_fl_link">
+    <inertial>
+      <origin
+        xyz="-8.32667268468867E-17 0.0101809797663877 -0.00879428398855082"
+        rpy="0 0 0" />
+      <mass
+        value="0.00608322105376719" />
+      <inertia
+        ixx="2.12921906667825E-06"
+        ixy="4.34590982308202E-21"
+        ixz="-3.68947801335886E-21"
+        iyy="1.91083611877142E-06"
+        iyz="6.15365329682498E-07"
+        izz="1.8374939001096E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_fl_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_fl_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motorbracket_fl_joint"
+    type="fixed">
+    <origin
+      xyz="0.085 0.037991 -0.002"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="motorbracket_fl_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="motor_fl_link">
+    <inertial>
+      <origin
+        xyz="-9.5265E-08 0.00049405 -3.2037E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.042092" />
+      <inertia
+        ixx="1.3775E-05"
+        ixy="-1.1406E-10"
+        ixz="2.7188E-10"
+        iyy="4.9901E-06"
+        iyz="-3.8435E-10"
+        izz="1.3775E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_fl_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_fl_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_fl_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.0079908 -0.0245"
+      rpy="0 0 0" />
+    <parent
+      link="motorbracket_fl_link" />
+    <child
+      link="motor_fl_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="wheel_fl_link">
+    <inertial>
+      <origin
+        xyz="7.97822019962813E-07 -0.0149928345886679 3.37951445161799E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.132597246667058" />
+      <inertia
+        ixx="5.65512745031579E-05"
+        ixy="-1.64157204178127E-09"
+        ixz="-2.49441876222743E-09"
+        iyy="9.31961918555651E-05"
+        iyz="-7.05944311659276E-11"
+        izz="5.65547558595817E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_fl_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_fl_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel_fl_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0775 0"
+      rpy="0 0 0" />
+    <parent
+      link="motor_fl_link" />
+    <child
+      link="wheel_fl_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="motorbracket_fr_link">
+    <inertial>
+      <origin
+        xyz="1.38777878078145E-17 -0.0101809797663875 -0.00879428398855099"
+        rpy="0 0 0" />
+      <mass
+        value="0.00608322105376719" />
+      <inertia
+        ixx="2.12921906667825E-06"
+        ixy="-1.10502270722204E-21"
+        ixz="1.62613072741423E-21"
+        iyy="1.91083611877144E-06"
+        iyz="-6.15365329682496E-07"
+        izz="1.83749390010959E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_fr_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_fr_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motorbracket_fr_joint"
+    type="fixed">
+    <origin
+      xyz="0.0850000000000002 -0.0379907704315111 -0.00200000000000059"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="motorbracket_fr_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="motor_fr_link">
+    <inertial>
+      <origin
+        xyz="-2.59720585274459E-07 -0.000494051151757506 -2.10380500881291E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.042092392420595" />
+      <inertia
+        ixx="1.37744183750105E-05"
+        ixy="3.11673267195815E-10"
+        ixz="-3.14165930816589E-11"
+        iyy="4.99008312109064E-06"
+        iyz="2.52185897613015E-10"
+        izz="1.3775251827675E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_fr_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_fr_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_fr_joint"
+    type="fixed">
+    <origin
+      xyz="0 0.0079908 -0.0245"
+      rpy="0 0 0" />
+    <parent
+      link="motorbracket_fr_link" />
+    <child
+      link="motor_fr_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="wheel_fr_link">
+    <inertial>
+      <origin
+        xyz="1.31517531073988E-07 0.014992834588668 7.87632672305527E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.132597246667058" />
+      <inertia
+        ixx="5.65540953281575E-05"
+        ixy="2.71656748702298E-10"
+        ixz="-2.84347824250465E-09"
+        iyy="9.31961918555652E-05"
+        iyz="1.62047676730197E-09"
+        izz="5.65519350345821E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_fr_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_fr_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel_fr_joint"
+    type="continuous">
+    <origin
+      xyz="0 -0.0775 0"
+      rpy="0 0 0" />
+    <parent
+      link="motor_fr_link" />
+    <child
+      link="wheel_fr_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="motorbracket_bl_link">
+    <inertial>
+      <origin
+        xyz="-5.55111512312578E-17 0.0101809797663877 -0.00879428398855093"
+        rpy="0 0 0" />
+      <mass
+        value="0.00608322105376719" />
+      <inertia
+        ixx="2.12921906667825E-06"
+        ixy="3.03573452606615E-21"
+        ixz="-3.29832464622636E-21"
+        iyy="1.91083611877142E-06"
+        iyz="6.153653296825E-07"
+        izz="1.8374939001096E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_bl_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_bl_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motorbracket_bl_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0850000000000002 0.0379907704315112 -0.00199999999999938"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="motorbracket_bl_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="motor_bl_link">
+    <inertial>
+      <origin
+        xyz="-9.52647042362642E-08 0.000494051151757761 -3.20373802972784E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.0420923924205944" />
+      <inertia
+        ixx="1.37751524776011E-05"
+        ixy="-1.14064183836825E-10"
+        ixz="2.71882601070877E-10"
+        iyy="4.99008312109062E-06"
+        iyz="-3.84353111614289E-10"
+        izz="1.37745177250838E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_bl_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_bl_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_bl_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.0079908 -0.0245"
+      rpy="0 0 0" />
+    <parent
+      link="motorbracket_bl_link" />
+    <child
+      link="motor_bl_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="wheel_bl_link">
+    <inertial>
+      <origin
+        xyz="6.68215741628231E-08 -0.0149928345886679 -7.95736743344766E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.132597246667058" />
+      <inertia
+        ixx="5.6554543362845E-05"
+        ixy="-1.38547605071664E-10"
+        ixz="2.62997090832959E-09"
+        iyy="9.31961918555653E-05"
+        iyz="1.63723758305458E-09"
+        izz="5.6551486999895E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_bl_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_bl_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel_bl_joint"
+    type="continuous">
+    <origin
+      xyz="0 0.0775 0"
+      rpy="0 0 0" />
+    <parent
+      link="motor_bl_link" />
+    <child
+      link="wheel_bl_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="motorbracket_br_Link">
+    <inertial>
+      <origin
+        xyz="0 -0.0101809797663876 -0.00879428398855096"
+        rpy="0 0 0" />
+      <mass
+        value="0.00608322105376718" />
+      <inertia
+        ixx="2.12921906667825E-06"
+        ixy="-1.349221184075E-21"
+        ixz="2.06700336881217E-21"
+        iyy="1.91083611877144E-06"
+        iyz="-6.15365329682499E-07"
+        izz="1.83749390010958E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_br_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motorbracket_br_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motorbracket_br_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0849999999999999 -0.0379907704315117 -0.00200000000000003"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="motorbracket_br_Link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="motor_br_link">
+    <inertial>
+      <origin
+        xyz="0.000494051151757456 -2.59720585260581E-07 -2.10380500881291E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.0420923924205951" />
+      <inertia
+        ixx="4.99008312109064E-06"
+        ixy="-3.11673267223406E-10"
+        ixz="-2.52185897611746E-10"
+        iyy="1.37744183750105E-05"
+        iyz="-3.14165930811279E-11"
+        izz="1.37752518276751E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_br_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/motor_br_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="motor_br_joint"
+    type="fixed">
+    <origin
+      xyz="0 0.0079908 -0.0245"
+      rpy="0 0 -1.5708" />
+    <parent
+      link="motorbracket_br_Link" />
+    <child
+      link="motor_br_link" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="wheel_br_link">
+    <inertial>
+      <origin
+        xyz="-1.0631786313775E-05 0.014992834588668 -1.93041735137151E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.132597246667058" />
+      <inertia
+        ixx="5.65514278169526E-05"
+        ixy="-9.57536753019201E-10"
+        ixz="-2.59467913345226E-09"
+        iyy="9.31961918555651E-05"
+        iyz="-1.33523994393109E-09"
+        izz="5.6554602545787E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_br_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/wheel_br_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wheel_br_joint"
+    type="continuous">
+    <origin
+      xyz="0.0775 1.0167E-05 1.8655E-05"
+      rpy="0 0 1.5708" />
+    <parent
+      link="motor_br_link" />
+    <child
+      link="wheel_br_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="imu_link">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/imu_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ground_shark_mid360/meshes/imu_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="imu_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.1224991"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="imu_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
