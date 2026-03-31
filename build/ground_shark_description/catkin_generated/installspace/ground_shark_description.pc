@@ -1,0 +1,8 @@
+prefix=/home/ju/my_ground_shark_simulation/install
+
+Name: ground_shark_description
+Description: Description of ground_shark_description
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

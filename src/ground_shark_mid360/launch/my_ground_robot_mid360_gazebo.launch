@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<launch>
+
+    <!-- Start gazebo and load the world -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch" >
+        <arg name="world_name" value="$(find my_new_robot_simulation_pkg)/world/my_house_with_table.world"/> 
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+        <arg name="verbose" value="false"/>
+    </include>
+
+    <!-- Spawn the models -->
+    <arg name="start_models" default="true" />
+    <arg name="model_name" default="my_ground_robot_mid360" />
+    <arg name="x_position_init" default="-2.5" />
+    <arg name="y_position_init" default="-2.5" />
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ground_shark_mid360)/urdf/my_ground_robot_mid360.xacro' " />
+    <node if="$(arg start_models)" pkg="gazebo_ros" type="spawn_model" name="spawn_model" args="-urdf -param /robot_description -model $(arg model_name) -x $(arg x_position_init) -y $(arg y_position_init)" />
+
+    <!-- 发布tf变换，根据 robot_description ，默认订阅<joint_states>话题广播到tf树-->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <!-- 更新TF树的频率默认是10Hz，无人车30Hz合适，无人机50Hz+ -->
+        <!-- 由于 my_ground_robot_mid360 的所有关节都是fixed锁死的，坐标系关系不会发生变化，所以直接使用静态发布一次TF变换即可，节约资源 -->
+        <param name="publish_frequency" type="double" value="0.0001" />  
+    </node>
+
+
+    <!-- 是否在rviz订阅相关话题显示 -->
+    <arg name="start_rviz" default="true" />
+    <node if="$(arg start_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find ground_shark_mid360)/config/rviz_config.rviz"/> 
+    <!-- 将 livox雷达仿真插件的点云frame_id从 laser_lidar_link 映射到 lidar_link-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="livox_tf"
+      args="0 0 0 0 0 0 lidar_link laser_lidar_link" />
+
+
+    <!-- 是否启动键盘控制节点发布 /cmd_vel -->
+    <arg name="start_teleop" default="false" />
+    <node if="$(arg start_teleop)"  name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen"/>
+
+
+</launch>
+
+

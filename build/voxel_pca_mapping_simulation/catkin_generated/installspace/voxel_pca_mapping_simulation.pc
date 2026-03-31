@@ -1,0 +1,8 @@
+prefix=/home/ju/my_ground_shark_simulation/install
+
+Name: voxel_pca_mapping_simulation
+Description: Description of voxel_pca_mapping_simulation
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

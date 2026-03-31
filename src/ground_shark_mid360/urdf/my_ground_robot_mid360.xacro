@@ -2,21 +2,27 @@
 <!-- 地面麦轮小车 + Mid360 -->
 <!-- 关节连接基于base_link——lidar_link——imu_link -->
 
-<robot
-    name="ground_shark_mid360" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="ground_shark_mid360"
+    xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <!-- 1. 引入带有雷达模型的地面麦轮小车 -->
-    <xacro:include
-        filename="$(find ground_shark_mid360)/urdf/ground_shark_mid360_fixed.urdf" />
+    <!-- 引入带有雷达模型的地面麦轮小车 -->
+    <xacro:include filename="$(find ground_shark_mid360)/urdf/ground_shark_mid360_fixed.urdf" />
 
-    <!-- 2. 引入雷达仿真宏并调用→ 自动生成 Gazebo 仿真传感器（关键！） -->
+    <!-- 设置摩擦系数 -->
+    <xacro:include filename="$(find ground_shark_mid360)/urdf/basic_gazebo_plugins.xacro" />
+    <xacro:default_link link_name="wheel_fl_link" />
+    <xacro:default_link link_name="wheel_fr_link" />
+    <xacro:default_link link_name="wheel_bl_link" />
+    <xacro:default_link link_name="wheel_br_link" />
+    <xacro:default_link link_name="base_link" />
+    <!-- 引入万向控制插件控制车体 -->
+    <xacro:gazebo_ros_planner_move cmd_topic="cmd_vel" frame="base_footprint"  />
+
+    <!-- 引入雷达和IMU仿真宏并调用→ 自动生成 Gazebo 仿真传感器（关键！） -->
     <xacro:include filename="$(find ground_shark_mid360)/urdf/mid360_gazebo.xacro" />
-    <xacro:Livox_Mid_gazebo_sensor
-        name="lidar_link" 
-        visualize="true"
-        update_rate="10"
-        ros_topic="/livox/lidar"
-    />
+    <xacro:Livox_Mid_gazebo_sensor name="lidar_link" visualize="true" update_rate="10" ros_topic="/livox/lidar" />
+    <xacro:Livox_Mid_gazebo_imu name="imu_link" visualize="true" update_rate="200" ros_topic="/livox/imu" gaussianNoise="0.0" />
+
 
     <!-- 设置属性变好看一点 -->
     <gazebo reference="wheel_fl_link">
@@ -32,10 +38,18 @@
         <material>Gazebo/Black</material>
     </gazebo>
     <gazebo reference="imu_link">
-        <material>Gazebo/White</material>
+        <material>Gazebo/Green</material>
     </gazebo>
     <gazebo reference="lidar_link">
         <material>Gazebo/Blue</material>
     </gazebo>
+    <gazebo reference="camera_link">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <!-- 引入一个相机仿真宏 -->
+    <xacro:include filename="$(find ground_shark_mid360)/urdf/camera_gazebo.xacro" />
+    <xacro:sensor_camera name="my_camera" update_rate="30.0" image_topic="image_raw" frame="camera_link" />
+
 
 </robot>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 对于无人车在gazebo中一些常用的 仿真插件（可复用于任何机器人） -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="default_link" params="link_name:=base_link">
+    <gazebo reference="${link_name}">
+      <!-- 摩擦相关 -->
+      <!-- 主摩擦系数，决定与地面主方向的摩擦力 -->
+      <mu1>0.5</mu1>
+      <!-- 次摩擦系数，通常用来描述侧向或次要方向的摩擦力 -->
+      <mu2>0.5</mu2>
+      <!-- 指定 mu1 的方向，这里希望是万向的 -->
+      <fdir1>0 0 0</fdir1>
+      <!-- 接触相关 -->
+      <!-- Link速度的指数衰减因子，影响接触修正时速度的衰减（例如 0.3 表示保留 70% 的前一速度） -->
+      <!-- <dampingFactor>0.3</dampingFactor> -->
+      <!-- 最大接触修正速度，防止修正速度过大 -->
+      <maxVel>1.0</maxVel>
+      <!-- 当穿透深度超过此值时施加接触修正脉冲 -->
+      <!-- <minDepth>0.001</minDepth> -->
+      <!-- 接触刚度，决定碰撞时模型的“硬度”，值越大模型越难被压缩 -->
+      <kp>100000.0</kp>
+      <!-- 接触阻尼系数，影响碰撞过程中的能量耗散 -->
+      <kd>500.0</kd>
+      <!-- 可选：定义两个实体之间允许的最大接触数（这里在 physics 配置中通常会指定） -->
+      <!-- <maxContacts>10</maxContacts> -->
+      <!-- 材质 -->
+      <!-- 对激光的反射强度 -->
+      <!-- <laserRetro>0.9</laserRetro> -->
+    </gazebo>
+  </xacro:macro>
+
+  <!-- 加载万向控制插件控制车体，Planar Move Plugin仅适用与地面2D控制，空间3维控制使用xxx -->
+  <xacro:macro name="gazebo_ros_planner_move" params="model_name:=ground_shark cmd_topic:=cmd_vel true_odom_topic:=gazebo/odom_true odom_frame:=odom_true odom_rate:=200.0 frame:=base_link">
+    <gazebo>
+      <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+        <!-- <robotNamespace>/$(arg model_name)</robotNamespace> -->
+        <commandTopic>${cmd_topic}</commandTopic>
+        <odometryTopic>${true_odom_topic}</odometryTopic>
+        <odometryFrame>${odom_frame}</odometryFrame>
+        <odometryRate>${odom_rate}</odometryRate>
+        <robotBaseFrame>${frame}</robotBaseFrame>
+        <cmdTimeout>-1.0</cmdTimeout>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

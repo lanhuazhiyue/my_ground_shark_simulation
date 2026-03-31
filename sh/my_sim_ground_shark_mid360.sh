@@ -1,0 +1,1 @@
+roslaunch ground_shark_mid360 my_ground_robot_mid360_gazebo.launch start_rviz:=true start_teleop:=true;
