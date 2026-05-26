@@ -1,0 +1,8 @@
+prefix=/home/ju/my_ground_shark_simulation/devel
+
+Name: ground_shark_mid360
+Description: Description of ground_shark_mid360
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

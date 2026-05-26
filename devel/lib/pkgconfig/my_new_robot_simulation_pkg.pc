@@ -1,0 +1,8 @@
+prefix=/home/ju/my_ground_shark_simulation/devel
+
+Name: my_new_robot_simulation_pkg
+Description: Description of my_new_robot_simulation_pkg
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
