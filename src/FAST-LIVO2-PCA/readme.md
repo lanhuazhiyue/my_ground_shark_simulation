@@ -2,7 +2,7 @@
 
 ## 1.1. [FAST-LIVO2: Fast, Direct LiDAR-Inertial-Visual Odometry](./README_fast-livo2.md)
 
-按照fastlivo2的教程安装配置其标准环境，如果遇到编译错误可参考以下解决方案：[Sophus编译报错](./Supplementary/sophus报错.png)
+按照[fastlivo2的教程](./README_fast-livo2.md)安装配置其标准环境，如果遇到编译错误可参考以下解决方案：[Sophus编译报错](./Supplementary/sophus报错.png)
 
 关于fastlivo2论文和代码的详细讲解可以参考[论文fastlivo2论文详解]()和[fastlivo2工程详解]()、[fastlivo2代码详解]()。
 
