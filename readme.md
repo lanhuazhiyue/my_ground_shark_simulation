@@ -107,7 +107,7 @@ killall -9 gzserver gzclient
 
 输出：/odom、/map
 
-详细参考[Voxel_PCA_Mapping仿真](./src/FAST-LIVO2-PCA/README.md)
+详细参考[Voxel_PCA_Mapping仿真](./src/FAST-LIVO2-PCA/readme.md)
 
 ## 6. ground_shark_mid360 （自定义功能包）
 与ground_shark_description类似，是soliworks的urdf插件自动生成的一个机器人模型功能包，但作了改动，同时添加了gazebo仿真功能。
