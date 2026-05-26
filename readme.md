@@ -82,7 +82,7 @@ killall -9 gzserver gzclient
 
 详细参考[仿真系统](./src/my_new_robot_simulation_pkg/readme.md)
 
-## 3. fastlio2_2d_simulation （自定义功能包）
+## 3. fastlio2_2d_simulation （自定义功能包）(开发中)
 
 功能： fast-lio2的2D平面版本
 
@@ -92,7 +92,7 @@ killall -9 gzserver gzclient
 /lidar/imu
 开发中。。。。。。
 
-## 4. ego_simulation_gazebo （自定义功能包）
+## 4. ego_simulation_gazebo （自定义功能包）(开发中)
 
 功能： 无人机仿真，fast-lio2输入定位和点云，ego-planner进行建图导航。
 开发中。。。。。。
@@ -107,9 +107,9 @@ killall -9 gzserver gzclient
 
 输出：/odom、/map
 
-详细参考[Voxel_PCA_Mapping仿真](./src/voxel_PCA_mapping_simulation/readme.md)
+详细参考[Voxel_PCA_Mapping仿真](./src/FAST-LIVO2-PCA/README.md)
 
 ## 6. ground_shark_mid360 （自定义功能包）
-与ground_shark_description类似，是soliworks的urdf插件自动生成的一个机器人模型功能包，作了少许改动
+与ground_shark_description类似，是soliworks的urdf插件自动生成的一个机器人模型功能包，但作了改动，同时添加了gazebo仿真功能。
 
 详细参考[带有mid360雷达的无人车模型](./src/ground_shark_mid360/readme.md)

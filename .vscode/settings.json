@@ -77,5 +77,6 @@
         "typeinfo": "cpp",
         "variant": "cpp"
     },
-    "cmake.sourceDirectory": "/home/ju/my_ground_shark_simulation/src"
+    "cmake.sourceDirectory": "/home/ju/my_ground_shark_simulation/src",
+    "ROS2.distro": "noetic"
 }

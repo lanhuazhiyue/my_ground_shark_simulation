@@ -8,14 +8,18 @@
 
 ros::Publisher pc2_pub;
 
-void customMsgCallback(const livox_ros_driver2::CustomMsg::ConstPtr& msg) {
+void customMsgCallback(const livox_ros_driver2::CustomMsg::ConstPtr &msg)
+{
+  ROS_INFO_THROTTLE(1, "Received custom message with %ld points", msg->points.size()); // 每1秒打印一次消息
+  
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
   cloud->header.frame_id = msg->header.frame_id;
   cloud->height = 1;
   cloud->width = msg->points.size();
   cloud->is_dense = true;
 
-  for (const auto& p : msg->points) {
+  for (const auto &p : msg->points)
+  {
     pcl::PointXYZI pt;
     pt.x = p.x;
     pt.y = p.y;
@@ -29,12 +33,14 @@ void customMsgCallback(const livox_ros_driver2::CustomMsg::ConstPtr& msg) {
   pc2_pub.publish(pc2_msg);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
   ros::init(argc, argv, "custom2pc2");
   ros::NodeHandle nh;
   pc2_pub = nh.advertise<sensor_msgs::PointCloud2>("/livox/pointcloud2", 10);
   ros::Subscriber sub = nh.subscribe("/livox/lidar", 10, customMsgCallback);
   ROS_INFO("custom2pc2 node is running...");
+  ROS_INFO("ROS_INFO_THROTTLE set to 1 second");
   ros::spin();
   return 0;
 }

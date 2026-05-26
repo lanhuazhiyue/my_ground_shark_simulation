@@ -1,9 +1,10 @@
 <?xml version="1.0" ?>
 <launch>
-
+    <param name="use_sim_time" value="true" />
+    
     <!-- Start gazebo and load the world -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch" >
-        <arg name="world_name" value="$(find my_new_robot_simulation_pkg)/world/my_house_with_table.world"/> 
+        <arg name="world_name" value="$(find ground_shark_mid360)/world/my_house_with_table.world"/> 
         <arg name="paused" value="false"/>
         <arg name="use_sim_time" value="true"/>
         <arg name="gui" value="true"/>
@@ -29,7 +30,7 @@
 
 
     <!-- 是否在rviz订阅相关话题显示 -->
-    <arg name="start_rviz" default="true" />
+    <arg name="start_rviz" default="false" />
     <node if="$(arg start_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find ground_shark_mid360)/config/rviz_config.rviz"/> 
     <!-- 将 livox雷达仿真插件的点云frame_id从 laser_lidar_link 映射到 lidar_link-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="livox_tf"
