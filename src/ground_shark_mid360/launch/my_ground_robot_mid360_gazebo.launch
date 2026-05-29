@@ -4,13 +4,13 @@
     
     <!-- Start gazebo and load the world -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch" >
-        <arg name="world_name" value="$(find ground_shark_mid360)/world/my_house_with_table.world"/> 
+        <arg name="world_name" value="$(find ground_shark_mid360)/world/my_house_with_complex_environment.world"/> 
         <arg name="paused" value="false"/>
         <arg name="use_sim_time" value="true"/>
         <arg name="gui" value="true"/>
         <arg name="headless" value="false"/>
         <arg name="debug" value="false"/>
-        <arg name="verbose" value="false"/>
+        <arg name="verbose" value="true"/>
     </include>
 
     <!-- Spawn the models -->
@@ -19,7 +19,12 @@
     <arg name="x_position_init" default="-2.5" />
     <arg name="y_position_init" default="-2.5" />
     <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ground_shark_mid360)/urdf/my_ground_robot_mid360.xacro' " />
-    <node if="$(arg start_models)" pkg="gazebo_ros" type="spawn_model" name="spawn_model" args="-urdf -param /robot_description -model $(arg model_name) -x $(arg x_position_init) -y $(arg y_position_init)" />
+    <node if="$(arg start_models)" pkg="gazebo_ros" type="spawn_model" 
+        name="spawn_model" 
+        args="-urdf -param /robot_description -model $(arg model_name) -x $(arg x_position_init) -y $(arg y_position_init)" 
+        launch-prefix="bash -c 'sleep 8; exec $0 $@'"
+        output="screen">
+    </node>
 
     <!-- 发布tf变换，根据 robot_description ，默认订阅<joint_states>话题广播到tf树-->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
