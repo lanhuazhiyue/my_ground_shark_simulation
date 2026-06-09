@@ -81,3 +81,7 @@ pcd_save:
   colmap_output_en: true # need to set interval = -1
   filter_size_pcd: 0.15
   interval: -1
+
+pca:
+  pca_mapping_en: false
+  pca_visualization_en: false

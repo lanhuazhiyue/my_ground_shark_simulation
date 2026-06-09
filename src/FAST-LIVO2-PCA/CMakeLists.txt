@@ -75,6 +75,12 @@ if(mimalloc_FOUND)
 else()
   message(STATUS "mimalloc not found, proceeding without it")
 endif()
+
+# PCA-based voxel mapping option########################！！！注意！！！#################
+option(PCA_MAPPING "Enable PCA-based voxel mapping" OFF) # 需要使用PCA方法进行体素建图就把 OFF 改成 ON 或者直接在命令行 catkin_make -DPCA_MAPPING=ON
+if(PCA_MAPPING)
+  add_definitions(-DPCA_MAPPING)
+endif()
 ###################################################
 
 # Find catkin and required dependencies
@@ -121,7 +127,7 @@ include_directories(
 
 # Add libraries
 add_library(vio src/vio.cpp src/frame.cpp src/visual_point.cpp)
-add_library(lio src/voxel_map.cpp)
+add_library(lio src/voxel_map.cpp src/voxel_OctoTree.cpp src/voxel_PcaTree.cpp)
 add_library(pre src/preprocess.cpp)
 add_library(imu_proc src/IMU_Processing.cpp)
 add_library(laser_mapping src/LIVMapper.cpp)

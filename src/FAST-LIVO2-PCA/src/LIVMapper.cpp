@@ -386,7 +386,7 @@ void LIVMapper::handleLIO()
     state_update_flg = true;
   }
 
-  if (pose_output_en) // 是否输出位姿保存到数据文件中，一般用于后期评估
+  if (pose_output_en) // 是否输出位姿保存到数据文件中，一般用于后期评估，默认为false
   {
     static bool pos_opend = false;
     static int ocount = 0;
