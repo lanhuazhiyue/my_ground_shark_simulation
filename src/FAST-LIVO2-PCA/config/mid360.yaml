@@ -66,10 +66,11 @@ uav:
   gravity_align_en: true
 
 publish:
-  dense_map_en: false # 是否发布当前帧未经0.1m体素降采样的稠密点云到 /cloud_register
+  dense_map_en: false       # 是否发布当前帧未经0.1m体素降采样的稠密点云到 /cloud_register
   pub_effect_point_en: true # 是否发布当前帧成功匹配到平面的有效点云
-  pub_plane_en: true # 是否发布拟合平面
-  pub_scan_num: 1 # 仅在VIO模式下有效，决定多少次VIO更新后发布一次多帧累积的着色点云
+  pub_pca_en: true          # 是否发布PCA特征向量
+  pub_plane_en: true        # 是否发布拟合平面
+  pub_scan_num: 1           # 仅在VIO模式下有效，决定多少次VIO更新后发布一次多帧累积的着色点云
   blind_rgb_points: 0.0
 
 evo:
@@ -82,6 +83,3 @@ pcd_save:
   filter_size_pcd: 0.15
   interval: -1
 
-pca:
-  pca_mapping_en: false
-  pca_visualization_en: false

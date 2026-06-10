@@ -1,5 +1,5 @@
 .vscode
-devel
 build
+devel
 **/Log/*
 !**/Log/.gitkeep

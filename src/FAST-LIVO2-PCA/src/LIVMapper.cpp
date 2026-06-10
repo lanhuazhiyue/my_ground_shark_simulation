@@ -429,7 +429,7 @@ void LIVMapper::handleLIO()
           voxelmap_manager->pv_list_[i].var = var;
   }
   voxelmap_manager->UpdateVoxelMap(voxelmap_manager->pv_list_); // 根据 const pv_list_ 更新 voxel_map_ 
-  std::cout << "[ LIO ] Update Voxel Map" << std::endl;
+  std::cout << "[ LIO ] Update Voxel " << VOXEL_TREE_NAME << " Map" << std::endl;
   _pv_list = voxelmap_manager->pv_list_; // 更新LIVMapper的 _pv_list ，供后续 VIO 使用
   
   double t4 = omp_get_wtime();

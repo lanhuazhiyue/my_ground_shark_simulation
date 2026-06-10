@@ -28,14 +28,7 @@ which is included as part of this source code package.
 #include <visualization_msgs/MarkerArray.h>
 
 #include "voxel_types.h"
-#ifdef PCA_MAPPING
-  #include "voxel_PcaTree.h"
-  using VoxelTree = VoxelPcaTree;
-#else
-  #include "voxel_OctoTree.h"
-  using VoxelTree = VoxelOctoTree;
-#endif
-
+#include "voxel_tree_alias.h"
 
 struct DS_POINT
 {

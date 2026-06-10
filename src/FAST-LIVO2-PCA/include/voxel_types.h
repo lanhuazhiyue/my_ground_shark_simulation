@@ -15,6 +15,7 @@ which is included as part of this source code package.
 #include "common_lib.h"
 #include <Eigen/Dense>
 
+
 #define VOXELMAP_HASH_P 116101
 #define VOXELMAP_MAX_N 10000000000
 
@@ -56,15 +57,12 @@ typedef struct VoxelMapConfig
   double dept_err_;
   double sigma_num_;
   bool is_pub_plane_map_;
+  bool is_pub_pca_en_;    // 是否发布PCA特征向量
 
   // config of local map sliding
   double sliding_thresh;
   bool map_sliding_en;
   int half_map_size;
-
-  // 新增pca相关的可配置参数
-  bool pca_mapping_en_;
-  bool pca_visualization_en_;
 } VoxelMapConfig;
 
 // ==================== 点-面匹配结构 ====================

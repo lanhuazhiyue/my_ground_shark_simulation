@@ -37,7 +37,8 @@ void calcBodyCov(Eigen::Vector3d &pb, const float range_inc, const float degree_
 void loadVoxelConfig(ros::NodeHandle &nh, VoxelMapConfig &voxel_config)
 {
   nh.param<bool>("publish/pub_plane_en", voxel_config.is_pub_plane_map_, false);
-  
+  nh.param<bool>("publish/pub_pca_en", voxel_config.is_pub_pca_en_, false);
+
   nh.param<int>("lio/max_layer", voxel_config.max_layer_, 1);
   nh.param<double>("lio/voxel_size", voxel_config.max_voxel_size_, 0.5);
   nh.param<double>("lio/min_eigen_value", voxel_config.planner_threshold_, 0.01);
@@ -52,8 +53,7 @@ void loadVoxelConfig(ros::NodeHandle &nh, VoxelMapConfig &voxel_config)
   nh.param<int>("local_map/half_map_size", voxel_config.half_map_size, 100);
   nh.param<double>("local_map/sliding_thresh", voxel_config.sliding_thresh, 8);
 
-  nh.param<bool>("pca/pca_mapping_en", voxel_config.pca_mapping_en_, false);
-  nh.param<bool>("pca/pca_visualization_en", voxel_config.pca_visualization_en_, false);
+  ROS_INFO("VOXEL_TREE_NAME: %s", VOXEL_TREE_NAME);
 }
 
 
@@ -522,7 +522,7 @@ void VoxelMapManager::build_single_residual(pointWithVar &pv, const VoxelTree *c
         if (current_octo->leaves_[leafnum] != nullptr)
         {
 
-          VoxelTree *leaf_octo = current_octo->leaves_[leafnum];
+          VoxelTree *leaf_octo = static_cast<VoxelTree*>(current_octo->leaves_[leafnum]);
           build_single_residual(pv, leaf_octo, current_layer + 1, is_sucess, prob, single_ptpl);
         }
       }
@@ -581,7 +581,7 @@ void VoxelMapManager::GetUpdatePlane(const VoxelTree *current_octo, const int pu
     {
       for (size_t i = 0; i < 8; i++)
       {
-        if (current_octo->leaves_[i] != nullptr) { GetUpdatePlane(current_octo->leaves_[i], pub_max_voxel_layer, plane_list); }
+        if (current_octo->leaves_[i] != nullptr) { GetUpdatePlane(static_cast<const VoxelTree*>(current_octo->leaves_[i]), pub_max_voxel_layer, plane_list); }
       }
     }
   }

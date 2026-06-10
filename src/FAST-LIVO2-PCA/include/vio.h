@@ -142,8 +142,8 @@ public:
   ~VIOManager();
   void updateStateInverse(cv::Mat img, int level);
   void updateState(cv::Mat img, int level);
-  void processFrame(cv::Mat &img, vector<pointWithVar> &pg, const unordered_map<VOXEL_LOCATION, VoxelOctoTree *> &feat_map, double img_time);
-  void retrieveFromVisualSparseMap(cv::Mat img, vector<pointWithVar> &pg, const unordered_map<VOXEL_LOCATION, VoxelOctoTree *> &plane_map);
+  void processFrame(cv::Mat &img, vector<pointWithVar> &pg, const unordered_map<VOXEL_LOCATION, VoxelTree *> &feat_map, double img_time);
+  void retrieveFromVisualSparseMap(cv::Mat img, vector<pointWithVar> &pg, const unordered_map<VOXEL_LOCATION, VoxelTree *> &plane_map);
   void generateVisualMapPoints(cv::Mat img, vector<pointWithVar> &pg);
   void setImuToLidarExtrinsic(const V3D &transl, const M3D &rot);
   void setLidarToCameraExtrinsic(vector<double> &R, vector<double> &P);
@@ -163,8 +163,8 @@ public:
   void insertPointIntoVoxelMap(VisualPoint *pt_new);
   void plotTrackedPoints();
   void updateFrameState(StatesGroup state);
-  void projectPatchFromRefToCur(const unordered_map<VOXEL_LOCATION, VoxelOctoTree *> &plane_map);
-  void updateReferencePatch(const unordered_map<VOXEL_LOCATION, VoxelOctoTree *> &plane_map);
+  void projectPatchFromRefToCur(const unordered_map<VOXEL_LOCATION, VoxelTree *> &plane_map);
+  void updateReferencePatch(const unordered_map<VOXEL_LOCATION, VoxelTree *> &plane_map);
   void precomputeReferencePatches(int level);
   void dumpDataForColmap();
   double calculateNCC(float *ref_patch, float *cur_patch, int patch_size);

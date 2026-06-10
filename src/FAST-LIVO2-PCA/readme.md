@@ -35,6 +35,9 @@ roslaunch fast_livo_pca mapping_mid360.launch
 
 ### 1.2.3. 可视化观察 VoxelPcaTree
 在编译时配置 PCA_MAPPING 参数的开关 ,即可屏蔽 VoxelOctoTree 的使用而改用新建的 VoxelPcaTree 
+```bash
+catkin_make -DPCA_MAPPING=ON
+```
 
 实现方法：未动原始代码的逻辑，~~而是利用c++的多态机制将 VoxelOctoTree 的接口函数换为 virtual虚函数后，让 VoxelPcaTree 继承 VoxelOctoTree ，在创建 VoxelOctoTree*指针时根据 pca_mapping_en 来选择对象实际是 VoxelOctoTree类还是 VoxelPcaTree类。~~ 而是添加了宏定义，为VoxelMapManager的成员函数中的 VoxelOctoTree *指针使用了别名 VoxelTree *，在编译期使用 add_definitions(-DPCA_MAPPING) 决定实际是 VoxelOctoTree 还是 VoxelPcaTree 。
 
