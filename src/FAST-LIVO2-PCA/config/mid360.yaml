@@ -78,8 +78,8 @@ evo:
   pose_output_en: false
 
 pcd_save:
-  pcd_save_en: false
-  colmap_output_en: true # need to set interval = -1
-  filter_size_pcd: 0.15
-  interval: -1
+  pcd_save_en: false      # 是否保存pcd文件
+  colmap_output_en: true  # need to set interval = -1 # 是否输出colmap格式的点云
+  filter_size_pcd: 0.15   # 对pcd文件进行体素滤波，0.15m*0.15m*0.15m
+  interval: -1            # 每个pcd文件的累积点云帧数，-1表示不分割，输出一个pcd文件
 

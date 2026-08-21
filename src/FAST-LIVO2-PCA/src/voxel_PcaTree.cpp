@@ -1,8 +1,45 @@
 #include "voxel_PcaTree.h"
 
-VoxelPcaTree::~VoxelPcaTree() {}
+VoxelPcaTree::~VoxelPcaTree() {} // 执行完派生类析构函数后会自动调用基类析构函数，无需手动调用
 
-// 核心：在创建子节点的地方都用 new VoxelPcaTree，其余逻辑与基类完全一致
+void VoxelPcaTree::init_plane(const std::vector<pointWithVar> &points, VoxelPlane *plane)
+{
+    // 直接调用基类的 init_plane 来计算平面参数
+    VoxelOctoTree::init_plane(points, plane);
+    // 这里可以添加 PCA 切分相关的额外逻辑，例如计算切分平面参数
+    if (plane->is_plane_)
+    {
+        split_plane_normal_ = plane->normal_; // 用平面法向量作为切分平面法向量
+        split_plane_offset_ = -split_plane_normal_.dot(plane->center_); // 切分平面过质心
+        has_split_plane_ = true;
+    }
+}
+
+void VoxelPcaTree::init_octo_tree()
+{
+    if (temp_points_.size() > (size_t)points_size_threshold_)
+    {
+        init_plane(temp_points_, plane_ptr_);
+        if (plane_ptr_->is_plane_)
+        {
+            octo_state_ = 0;
+            if (temp_points_.size() > (size_t)max_points_num_)
+            {
+                update_enable_ = false;
+                std::vector<pointWithVar>().swap(temp_points_);
+                new_points_ = 0;
+            }
+        }
+        else
+        {
+            octo_state_ = 1;
+            cut_octo_tree();   // 调用 VoxelPcaTree::cut_octo_tree
+        }
+        init_octo_ = true;
+        new_points_ = 0;
+    }
+}
+
 void VoxelPcaTree::cut_octo_tree()
 {
     // 完全复制基类的 cut_octo_tree，但将所有 new VoxelOctoTree 替换为 new VoxelPcaTree
@@ -65,33 +102,6 @@ void VoxelPcaTree::cut_octo_tree()
     }
 }
 
-// init_octo_tree 同样用派生类的 cut_octo_tree
-void VoxelPcaTree::init_octo_tree()
-{
-    if (temp_points_.size() > (size_t)points_size_threshold_)
-    {
-        init_plane(temp_points_, plane_ptr_);
-        if (plane_ptr_->is_plane_)
-        {
-            octo_state_ = 0;
-            if (temp_points_.size() > (size_t)max_points_num_)
-            {
-                update_enable_ = false;
-                std::vector<pointWithVar>().swap(temp_points_);
-                new_points_ = 0;
-            }
-        }
-        else
-        {
-            octo_state_ = 1;
-            cut_octo_tree();   // 调用 VoxelPcaTree::cut_octo_tree
-        }
-        init_octo_ = true;
-        new_points_ = 0;
-    }
-}
-
-// find_correspond：内部调用基类，然后安全转换（因为我们知道子节点是 VoxelPcaTree）
 VoxelPcaTree* VoxelPcaTree::find_correspond(Eigen::Vector3d pw)
 {
     // 直接调用基类的 find_correspond，它返回 VoxelOctoTree*
@@ -100,14 +110,13 @@ VoxelPcaTree* VoxelPcaTree::find_correspond(Eigen::Vector3d pw)
     return static_cast<VoxelPcaTree*>(node);
 }
 
-// Insert 类似处理
+
 VoxelPcaTree* VoxelPcaTree::Insert(const pointWithVar &pv)
 {
     VoxelOctoTree* node = VoxelOctoTree::Insert(pv);
     return static_cast<VoxelPcaTree*>(node);
 }
 
-// UpdateOctoTree：创建子节点时用 VoxelPcaTree，其余调用基类
 void VoxelPcaTree::UpdateOctoTree(const pointWithVar &pv)
 {
     // 沿用基类逻辑，但在需要新建子节点时，改为 new VoxelPcaTree

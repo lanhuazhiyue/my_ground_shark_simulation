@@ -11,6 +11,7 @@ public:
     ~VoxelPcaTree();
 
     // 重写这些函数以实现 PCA 切分逻辑
+    void init_plane(const std::vector<pointWithVar> &points, VoxelPlane *plane);
     void init_octo_tree();
     void cut_octo_tree();
     VoxelPcaTree* find_correspond(Eigen::Vector3d pw);

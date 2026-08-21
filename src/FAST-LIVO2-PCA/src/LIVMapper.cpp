@@ -215,6 +215,9 @@ void LIVMapper::initializeSubscribersAndPublishers(ros::NodeHandle &nh, image_tr
   pubImuPropOdom = nh.advertise<nav_msgs::Odometry>("/LIVO2/imu_propagate", 10000);
   imu_prop_timer = nh.createTimer(ros::Duration(0.004), &LIVMapper::imu_prop_callback, this);
   voxelmap_manager->voxel_map_pub_= nh.advertise<visualization_msgs::MarkerArray>("/planes", 10000);
+  // 新增
+  voxelmap_manager->pub_voxel_bounds_ = nh.advertise<visualization_msgs::MarkerArray>("/voxel_bounds", 1);
+  voxelmap_manager->pub_voxel_points_ = nh.advertise<sensor_msgs::PointCloud2>("/voxel_points", 1);
 }
 
 void LIVMapper::handleFirstFrame() 

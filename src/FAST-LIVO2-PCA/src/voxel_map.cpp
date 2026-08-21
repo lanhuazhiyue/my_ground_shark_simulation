@@ -568,7 +568,32 @@ void VoxelMapManager::pubVoxelMap()
     
   }
   voxel_map_pub_.publish(voxel_plane);
-  loop.sleep();
+  // plane_pub.publish(voxel_plane);
+
+  // ====== 新增：调试可视化体素边界与点云 ======
+  visualization_msgs::MarkerArray bound_markers;
+  pcl::PointCloud<pcl::PointXYZRGB>::Ptr debug_cloud(new pcl::PointCloud<pcl::PointXYZRGB>());
+  int marker_id = 0;
+
+  for (auto& kv : voxel_map_) {
+      collectDebugInfo(kv.second, bound_markers, debug_cloud, marker_id);
+  }
+
+  // 发布体素边界
+  if (pub_voxel_bounds_) {
+     pub_voxel_bounds_.publish(bound_markers);
+  }
+
+  // 发布体素内点云
+  if (pub_voxel_points_ && !debug_cloud->empty()) {
+      sensor_msgs::PointCloud2 cloud_msg;
+      pcl::toROSMsg(*debug_cloud, cloud_msg);
+      cloud_msg.header.frame_id = "camera_init";
+      cloud_msg.header.stamp = ros::Time::now();
+      pub_voxel_points_.publish(cloud_msg);
+  }
+  
+  // loop.sleep();
 }
 
 void VoxelMapManager::GetUpdatePlane(const VoxelTree *current_octo, const int pub_max_voxel_layer, std::vector<VoxelPlane> &plane_list)
@@ -604,7 +629,7 @@ void VoxelMapManager::pubSinglePlane(visualization_msgs::MarkerArray &plane_pub,
   geometry_msgs::Quaternion q;
   CalcVectQuation(single_plane.x_normal_, single_plane.y_normal_, single_plane.normal_, q);
   plane.pose.orientation = q;
-  plane.scale.x = 3 * sqrt(single_plane.max_eigen_value_);
+  plane.scale.x = 3 * sqrt(single_plane.max_eigen_value_); // 根据平面特征值的大小调整平面在rviz中的显示大小，特征值越大表示平面越不确定，显示越小
   plane.scale.y = 3 * sqrt(single_plane.mid_eigen_value_);
   plane.scale.z = 2 * sqrt(single_plane.min_eigen_value_);
   plane.color.a = alpha;
@@ -615,14 +640,80 @@ void VoxelMapManager::pubSinglePlane(visualization_msgs::MarkerArray &plane_pub,
   plane_pub.markers.push_back(plane);
 }
 
+// 新增递归函数，用于收集调试信息，包括边界框和点云数据
+void VoxelMapManager::collectDebugInfo(const VoxelOctoTree* node,
+                                       visualization_msgs::MarkerArray& bound_markers,
+                                       pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,
+                                       int& marker_id) const
+{
+    if (!node) return;
+
+    // 获取平面法向量（若存在）
+    Eigen::Vector3d normal(0,0,1);
+    bool has_plane = node->plane_ptr_->is_plane_;
+    if (has_plane) {
+        normal = node->plane_ptr_->normal_;
+        normal.normalize();
+    }
+
+    // 计算法向量与理想墙面方向的偏差（假设理想墙面法向量为水平方向，即点乘 Z 轴应接近 0）
+    // 我们用法向量与 Z 轴（垂直方向）的夹角来衡量：夹角接近 90° 说明是垂直墙面，接近 0° 说明是水平面。
+    double dot_z = std::abs(normal.z());  // normal 已归一化
+    // 夹角余弦值：dot_z 小表示垂直墙（正常），dot_z 大表示水平面或倾斜严重
+    // 我们将 dot_z > 0.3 视为“异常”（即法向量过于垂直或倾斜）
+
+    // 颜色映射：异常 → 红色，正常 → 绿色
+    uint8_t r, g, b;
+    if (has_plane && dot_z > 0.3) {  // 可根据实际情况调整阈值
+        r = 255; g = 50; b = 50;    // 红色：异常
+    } else if (has_plane) {
+        r = 50; g = 255; b = 50;    // 绿色：正常垂直面
+    } else {
+        r = 200; g = 200; b = 0;    // 黄色：尚未形成平面
+    }
+
+    // 将该体素的所有临时点加入点云，并着色
+    for (const auto& pv : node->temp_points_) {
+        pcl::PointXYZRGB pt;
+        pt.x = pv.point_w.x();
+        pt.y = pv.point_w.y();
+        pt.z = pv.point_w.z();
+        pt.r = r; pt.g = g; pt.b = b;
+        cloud->push_back(pt);
+    }
+
+    // 绘制体素边界（颜色与点云一致，但透明度降低）
+    if (node->octo_state_ == 0 || node->plane_ptr_->is_plane_ || node->layer_ >= node->max_layer_) {
+        // ...（边界绘制代码不变，颜色使用上面的 r,g,b）
+        // 注意：边界颜色也应使用相同的 r,g,b，alpha 设为 0.3
+    }
+
+    // 递归子节点
+    if (!node->plane_ptr_->is_plane_ && node->layer_ < node->max_layer_) {
+        for (int i=0; i<8; ++i) {
+            if (node->leaves_[i]) {
+                collectDebugInfo(node->leaves_[i], bound_markers, cloud, marker_id);
+            }
+        }
+    }
+}
+
 void VoxelMapManager::CalcVectQuation(const Eigen::Vector3d &x_vec, const Eigen::Vector3d &y_vec, const Eigen::Vector3d &z_vec,
                                       geometry_msgs::Quaternion &q)
 {
-  Eigen::Matrix3d rot;
-  rot << x_vec(0), x_vec(1), x_vec(2), y_vec(0), y_vec(1), y_vec(2), z_vec(0), z_vec(1), z_vec(2);
-  Eigen::Matrix3d rotation = rot.transpose();
-  Eigen::Quaterniond eq(rotation);
-  eq.normalize();   // 确保单位四元数
+  // Eigen::Matrix3d rot;
+  // rot << x_vec(0), x_vec(1), x_vec(2), y_vec(0), y_vec(1), y_vec(2), z_vec(0), z_vec(1), z_vec(2);
+  // Eigen::Matrix3d rotation = rot.transpose();
+  // Eigen::Quaterniond eq(rotation);
+  // eq.normalize();   // 确保单位四元数
+  // q.w = eq.w();
+  // q.x = eq.x();
+  // q.y = eq.y();
+  // q.z = eq.z();
+
+  // 源代码的三个轴向量并不完全正交（x和y轴平面向量没有随着z轴法向量同步更新），因此改为仅使用法向量计算四元数
+  Eigen::Quaterniond eq = Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitZ(), z_vec);
+  eq.normalize();
   q.w = eq.w();
   q.x = eq.x();
   q.y = eq.y();

@@ -47,7 +47,9 @@ void VoxelOctoTree::init_plane(const std::vector<pointWithVar> &points, VoxelPla
   J_Q << 1.0 / plane->points_size_, 0, 0, 0, 1.0 / plane->points_size_, 0, 0, 0, 1.0 / plane->points_size_;
   // && evalsReal(evalsMid) > 0.05
   //&& evalsReal(evalsMid) > 0.01
-  if (evalsReal(evalsMin) < planer_threshold_) // 如果能成面
+  double planarity = evalsReal(evalsMin) / evalsReal(evalsMid); // 平面度量，越小越像平面 
+  // if (evalsReal(evalsMin) < planer_threshold_ && planarity < 0.1) // 如果能成面
+  if (evalsReal(evalsMin) < planer_threshold_ ) // 如果能成面
   {
     for (int i = 0; i < points.size(); i++) // 遍历所有点获得平面不确定性
     {

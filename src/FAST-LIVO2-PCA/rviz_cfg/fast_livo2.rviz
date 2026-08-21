@@ -24,6 +24,8 @@ Panels:
         - /MarkerArray5
         - /Image1
         - /MarkerArray6
+        - /MarkerArray7
+        - /PointCloud25
       Splitter Ratio: 0.34272301197052
     Tree Height: 768
   - Class: rviz/Selection
@@ -43,7 +45,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: surround
+    SyncSource: currPoints
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -530,6 +532,42 @@ Visualization Manager:
         plane: true
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /voxel_bounds
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 1000
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /voxel_points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -558,7 +596,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 7.309256553649902
+      Distance: 5.518660545349121
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -566,17 +604,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.9637117981910706
-        Y: 0.6027565002441406
-        Z: -3.2958130759652704e-05
+        X: -0.43238019943237305
+        Y: -0.08494865894317627
+        Z: -3.1050782126840204e-05
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.499795913696289
+      Pitch: 0.8997982740402222
       Target Frame: drone
-      Yaw: 3.1768100261688232
+      Yaw: 3.300035238265991
     Saved:
       - Class: rviz/Orbit
         Distance: 117.53474426269531

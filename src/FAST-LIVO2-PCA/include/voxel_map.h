@@ -29,6 +29,8 @@ which is included as part of this source code package.
 
 #include "voxel_types.h"
 #include "voxel_tree_alias.h"
+#include <sensor_msgs/PointCloud2.h>
+#include <pcl_conversions/pcl_conversions.h>
 
 struct DS_POINT
 {
@@ -50,6 +52,8 @@ public:
   VoxelMapConfig config_setting_;
   int current_frame_id_ = 0;
   ros::Publisher voxel_map_pub_;
+  ros::Publisher pub_voxel_bounds_;       // 新增：体素边界
+  ros::Publisher pub_voxel_points_;       // 新增：体素内点云
   std::unordered_map<VOXEL_LOCATION, VoxelTree *> voxel_map_;
 
   PointCloudXYZI::Ptr feats_undistort_;
@@ -100,6 +104,11 @@ public:
                              PointToPlane &single_ptpl);
 
   void pubVoxelMap();
+  // 新增：递归收集体素边界与点云信息
+  void collectDebugInfo(const VoxelOctoTree* node,
+                        visualization_msgs::MarkerArray& bound_markers,
+                        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud,
+                        int& marker_id) const;
 
   void mapSliding();
   void clearMemOutOfMap(const int& x_max,const int& x_min,const int& y_max,const int& y_min,const int& z_max,const int& z_min );
